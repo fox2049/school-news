@@ -99,17 +99,17 @@ if __name__ == '__main__':
         news_3 = fashion_spider()
         if len(news_1) != 0:
             f.write("研究生处新闻\n")
-            for i in news_1:
-                f.write(i + "\n")
+            for idx, i in enumerate(news_1):
+                f.write(str(idx) + ". " + i + "\n")
         if len(news_2) != 0:
             f.write("学校新闻\n")
-            for i in news_2:
-                f.write(i + "\n")
+            for idx, i in enumerate(news_2):
+                f.write(str(idx) + ". " + i + "\n")
         if len(news_3) != 0:
             f.write("学校新闻\n")
             news_3 = fashion_spider()
-            for i in news_3:
-                f.write(i + "\n")
+            for idx, i in enumerate(news_3):
+                f.write(str(idx) + ". " + i + "\n")
         f.seek(0, 0)
         content = f.read()
         send_email("每日新闻", content)
