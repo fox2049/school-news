@@ -5,6 +5,13 @@ import time
 import sys
 import yagmail
 from re import compile
+from datetime import datetime, timedelta
+
+
+time_utc = datetime.utcnow()
+time_peking = (time_utc + timedelta(hours=8))
+now_day = time_peking.strftime("%Y-%m-%d")
+now_time = time_peking.strftime("%H:%M")
 
 
 def ge_spider():  # graduate school news
@@ -25,7 +32,7 @@ def ge_spider():  # graduate school news
             # link = urljoin(i, s_link)
             date = item.find('span', class_="news_meta").text
             no_update = True
-            if date == time.strftime("%Y-%m-%d", time.localtime()):
+            if date == now_day:
                 news_list.append(title)
     return news_list
 
@@ -54,7 +61,7 @@ def school_spider():  # report news
             title = item.find('span', class_='column-news-title').text
             # link = urljoin(url, item['href'])
             date = item.find('span', class_='column-news-date news-date-hide').text
-            if date == time.strftime("%Y-%m-%d", time.localtime()):
+            if date == now_day:
                 news_list.append(title)
     return news_list
 
@@ -79,7 +86,7 @@ def fashion_spider():
         # link = urljoin(url, s_link)
         date = date_list[date_counter]
         date_counter += 1
-        if date == time.strftime("%Y-%m-%d", time.localtime()):
+        if date == now_day:
             news_list.append(title)
     return news_list
 
@@ -87,8 +94,8 @@ def fashion_spider():
 def send_email(title, _contents):
     yag = yagmail.SMTP(user='suesedu@aliyun.com', password=sys.argv[2],
                        host='smtp.aliyun.com')
-    grab_time = time.strftime("%H:%M:%S", time.localtime())
-    send_contents = _contents + '\n\n' + grab_time + '\n\npowered by https://foxsun2020.github.io'
+    grab_time = now_time
+    send_contents = _contents + '\n\ngrab time: ' + grab_time + '\n\npowered by https://foxsun2020.github.io'
     yag.send(sys.argv[1], title, send_contents)
 
 
@@ -113,5 +120,4 @@ if __name__ == '__main__':
                 f.write(str(idx+1) + ". " + i + "\n")
         f.seek(0, 0)
         content = f.read()
-        date = time.strftime("%m月%d日", time.localtime())
-        send_email(f"{date}新闻", content)
+        send_email(f"{now_day}新闻", content)
