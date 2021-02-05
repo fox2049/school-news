@@ -134,9 +134,10 @@ if __name__ == '__main__':
             for idx, i in enumerate(news_3):
                 f.write(str(idx+1) + ". " + i + "\n")
         f.seek(0, 0)
+        air()
         contents = [
-            yagmail.inline('/air.png'),
-            '/n',
+            yagmail.inline('air.png'),
+            '\n',
             f.read(),
             '\n\ngrab time: ',
             now_time,
