@@ -135,7 +135,7 @@ if __name__ == '__main__':
                 f.write(str(idx+1) + ". " + i + "\n")
         f.seek(0, 0)
         contents = [
-            yagmail.inline('air.png'),
+            yagmail.inline('/air.png'),
             '/n',
             f.read(),
             '\n\ngrab time: ',
