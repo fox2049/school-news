@@ -141,6 +141,6 @@ if __name__ == '__main__':
             f.read(),
             '\n\ngrab time: ',
             now_time,
-            '\n\npowered by https://foxsun2020.github.io'
+            '\n\npowered by <a href="https://foxsun2020.github.io">fox2020</a>'
         ]
         send_email(f"{now_day}新闻", contents)
