@@ -11,7 +11,22 @@ from datetime import datetime, timedelta
 time_utc = datetime.utcnow()
 time_peking = (time_utc + timedelta(hours=8))
 now_day = time_peking.strftime("%Y-%m-%d")
-now_time = time_peking.strftime("%H:%M")
+now_time = time_peking.strftime("%H:%M:%S")
+
+
+def air():
+    url = 'https://aqicn.org/snapshot/zibo'  # zibo_pm2.5
+    ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
+         '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
+    response = get(url, headers={'User-Agent': ua})
+    data = response.content.decode('utf-8')
+    soup = BeautifulSoup(data, 'html.parser')
+    s = soup.find(name='meta', attrs={'property': 'og:image'})
+    png_url = s['content']
+    r = get(png_url, headers={'User-Agent': ua})
+    content = r.content
+    with open('air.png', 'wb') as fp:
+        fp.write(content)
 
 
 def ge_spider():  # graduate school news
@@ -97,6 +112,7 @@ def send_email(title, _contents):
     grab_time = now_time
     send_contents = _contents + '\n\ngrab time: ' + grab_time + '\n\npowered by https://foxsun2020.github.io'
     yag.send(sys.argv[1], title, send_contents)
+    print("邮件发送成功")
 
 
 # Press the green button in the gutter to run the script.
@@ -119,5 +135,9 @@ if __name__ == '__main__':
             for idx, i in enumerate(news_3):
                 f.write(str(idx+1) + ". " + i + "\n")
         f.seek(0, 0)
-        content = f.read()
-        send_email(f"{now_day}新闻", content)
+        contents = [
+            yagmail.inline('air.png'),
+            '/n',
+            f.read()  # 邮件内容中内嵌图片
+        ]
+        send_email(f"{now_day}新闻", contents)
