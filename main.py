@@ -109,7 +109,6 @@ def fashion_spider():
 def send_email(title, _contents):
     yag = yagmail.SMTP(user='suesedu@aliyun.com', password=sys.argv[2],
                        host='smtp.aliyun.com')
-    grab_time = now_time
     send_contents = _contents
     yag.send(sys.argv[1], title, send_contents)
     print("邮件发送成功")
@@ -140,7 +139,7 @@ if __name__ == '__main__':
             '/n',
             f.read(),
             '\n\ngrab time: ',
-            grab_time,
+            now_time,
             '\n\npowered by https://foxsun2020.github.io'
         ]
         send_email(f"{now_day}新闻", contents)
