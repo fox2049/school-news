@@ -139,8 +139,11 @@ if __name__ == '__main__':
             yagmail.inline('air.png'),
             '\n',
             f.read(),
-            '\n\ngrab time: ',
+            '\ngrab time: ',
             now_time,
-            '\n\npowered by <a href="https://foxsun2020.github.io">fox2020</a>'
+            '\npowered by <a href="https://foxsun2020.github.io">fox2020</a>'
         ]
-        send_email(f"{now_day}新闻", contents)
+        if len(news_1 + news_2 + news_3) == 0:
+            send_email(f"{now_day}空气质量", contents)
+        else:
+            send_email(f"{now_day}新闻", contents)
