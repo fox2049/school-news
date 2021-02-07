@@ -1,6 +1,6 @@
 from requests import get
 from bs4 import BeautifulSoup
-# from urllib.parse import urljoin
+from urllib.parse import urljoin
 import time
 import sys
 import yagmail
@@ -45,12 +45,11 @@ def ge_spider():  # graduate school news
         s = soup.findAll('li', class_=compile(r"news n(.*)"))
         for item in s:
             title = '★' + item.find('a', href=compile(r'(\w)'))['title'] + '★'
-            # s_link = item.find('a', href=compile(r'(\w)'))['href']
-            # link = urljoin(i, s_link)
+            s_link = item.find('a', href=compile(r'(\w)'))['href']
+            link = urljoin(i, s_link)
             date = item.find('span', class_="news_meta").text
-            no_update = True
             if date == now_day or date == last_day:
-                news_list.append(title)
+                news_list.append(f"<a href={link}>{title}</a>")
     return news_list
 
 
@@ -76,10 +75,10 @@ def school_spider():  # report news
         s = soup.findAll('a', class_=compile(r"column-news-item item-(.?) clearfix"))
         for item in s:
             title = item.find('span', class_='column-news-title').text
-            # link = urljoin(url, item['href'])
+            link = urljoin(url, item['href'])
             date = item.find('span', class_='column-news-date news-date-hide').text
             if date == now_day or date == last_day:
-                news_list.append(title)
+                news_list.append(f"<a href={link}>{title}</a>")
     return news_list
 
 
@@ -100,11 +99,11 @@ def fashion_spider():
     for item in s:
         title = item.find(name='a', href=compile(r'(\w)'))['title']
         s_link = item.find('a', href=compile(r'(\w)'))['href']
-        # link = urljoin(url, s_link)
+        link = urljoin(url, s_link)
         date = date_list[date_counter]
         date_counter += 1
         if date == now_day or date == last_day:
-            news_list.append(title)
+            news_list.append(f"<a href={link}>{title}</a>")
     return news_list
 
 
