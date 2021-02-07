@@ -10,12 +10,14 @@ from datetime import datetime, timedelta
 
 time_utc = datetime.utcnow()
 time_peking = (time_utc + timedelta(hours=8))
+last_peking = (time_utc + timedelta(hours=-16))
 now_day = time_peking.strftime("%Y-%m-%d")
 now_time = time_peking.strftime("%H:%M:%S")
+last_day = last_peking.strftime("%Y-%m-%d")
 
 
-def air():
-    url = 'https://aqicn.org/snapshot/zibo'  # zibo_pm2.5
+def air(location):
+    url = 'https://aqicn.org/snapshot/' + location  # zibo_pm2.5
     ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
          '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
     response = get(url, headers={'User-Agent': ua})
@@ -47,7 +49,7 @@ def ge_spider():  # graduate school news
             # link = urljoin(i, s_link)
             date = item.find('span', class_="news_meta").text
             no_update = True
-            if date == now_day:
+            if date == now_day or date == last_day:
                 news_list.append(title)
     return news_list
 
@@ -76,7 +78,7 @@ def school_spider():  # report news
             title = item.find('span', class_='column-news-title').text
             # link = urljoin(url, item['href'])
             date = item.find('span', class_='column-news-date news-date-hide').text
-            if date == now_day:
+            if date == now_day or date == last_day:
                 news_list.append(title)
     return news_list
 
@@ -101,7 +103,7 @@ def fashion_spider():
         # link = urljoin(url, s_link)
         date = date_list[date_counter]
         date_counter += 1
-        if date == now_day:
+        if date == now_day or date == last_day:
             news_list.append(title)
     return news_list
 
@@ -134,7 +136,7 @@ if __name__ == '__main__':
             for idx, i in enumerate(news_3):
                 f.write(str(idx+1) + ". " + i + "\n")
         f.seek(0, 0)
-        air()
+        air("zibo")
         contents = [
             yagmail.inline('air.png'),
             '\n',
