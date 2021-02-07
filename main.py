@@ -140,8 +140,7 @@ if __name__ == '__main__':
             yagmail.inline('air.png'),
             '\n',
             f.read(),
-            '\ngrab time: ',
-            now_time,
+            f'\n抓取时间: {now_time}',
             '\npowered by <a href="https://foxsun2020.github.io">fox2020</a>'
         ]
         if len(news_1 + news_2 + news_3) == 0:
