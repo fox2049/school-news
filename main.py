@@ -141,7 +141,7 @@ if __name__ == '__main__':
             '\n',
             f.read(),
             f'\n抓取时间: {now_time}',
-            '\npowered by <a href="https://foxsun2020.github.io">fox2020</a>'
+            '\npowered by <a href="https://github.com/fox2049">fox2049</a>'
         ]
         if len(news_1 + news_2 + news_3) == 0:
             send_email(f"{now_day}空气质量", contents)
