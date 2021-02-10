@@ -15,11 +15,11 @@ now_day = time_peking.strftime("%Y-%m-%d")
 now_time = time_peking.strftime("%H:%M:%S")
 last_day = last_peking.strftime("%Y-%m-%d")
 
+ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
+         '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
 
 def air(location):
     url = 'https://aqicn.org/snapshot/' + location  # zibo_pm2.5
-    ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
-         '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
     response = get(url, headers={'User-Agent': ua})
     data = response.content.decode('utf-8')
     soup = BeautifulSoup(data, 'html.parser')
@@ -36,8 +36,6 @@ def ge_spider():  # graduate school news
     url1 = 'https://ge.sues.edu.cn/19716/list.htm'  # postgraduate school
     url2 = 'https://lib.sues.edu.cn/'  # library
     url_list = [url1, url2]
-    ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
-         '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
     for i in url_list:
         response = get(i, headers={'User-Agent': ua})
         data = response.content.decode('utf-8')
@@ -67,8 +65,6 @@ def school_spider():  # report news
     url10 = 'https://www.sues.edu.cn/82/list.htm'  # 学科建设
     for i in range(1, 11):
         url = eval('url%s' % i)
-        ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
-             '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
         response = get(url, headers={'User-Agent': ua})
         data = response.content.decode('utf-8')
         soup = BeautifulSoup(data, 'html.parser')
@@ -85,8 +81,6 @@ def school_spider():  # report news
 def fashion_spider():
     news_list = []
     url = 'https://cfd.sues.edu.cn/'
-    ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
-         '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
     response = get(url, headers={'User-Agent': ua})
     data = response.content.decode('utf-8')
     soup = BeautifulSoup(data, 'html.parser')
@@ -117,33 +111,36 @@ def send_email(title, _contents):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    with open(r'News_Archive.txt', 'a+', encoding='utf-8') as f:
-        news_1 = ge_spider()
-        news_2 = school_spider()
-        news_3 = fashion_spider()
-        if len(news_1) != 0:
-            f.write("研究生处新闻\n")
-            for idx, i in enumerate(news_1):
-                f.write(str(idx+1) + ". " + i + "\n")
-        if len(news_2) != 0:
-            f.write("学校新闻\n")
-            for idx, i in enumerate(news_2):
-                f.write(str(idx+1) + ". " + i + "\n")
-        if len(news_3) != 0:
-            f.write("学校新闻\n")
+    try:
+        with open(r'News_Archive.txt', 'a+', encoding='utf-8') as f:
+            news_1 = ge_spider()
+            news_2 = school_spider()
             news_3 = fashion_spider()
-            for idx, i in enumerate(news_3):
-                f.write(str(idx+1) + ". " + i + "\n")
-        f.seek(0, 0)
-        air("zibo")
-        contents = [
-            yagmail.inline('air.png'),
-            '\n',
-            f.read(),
-            f'\n抓取时间: {now_time}',
-            '\npowered by <a href="https://github.com/fox2049">fox2049</a>'
-        ]
-        if len(news_1 + news_2 + news_3) == 0:
-            send_email(f"{now_day}空气质量", contents)
-        else:
-            send_email(f"{now_day}新闻", contents)
+            if len(news_1) != 0:
+                f.write("研究生处新闻\n")
+                for idx, i in enumerate(news_1):
+                    f.write(str(idx+1) + ". " + i + "\n")
+            if len(news_2) != 0:
+                f.write("学校新闻\n")
+                for idx, i in enumerate(news_2):
+                    f.write(str(idx+1) + ". " + i + "\n")
+            if len(news_3) != 0:
+                f.write("学校新闻\n")
+                news_3 = fashion_spider()
+                for idx, i in enumerate(news_3):
+                    f.write(str(idx+1) + ". " + i + "\n")
+            f.seek(0, 0)
+            air("zibo")
+            contents = [
+                yagmail.inline('air.png'),
+                '\n',
+                f.read(),
+                f'\n抓取时间: {now_time}',
+                '\npowered by <a href="https://github.com/fox2049">fox2049</a>'
+            ]
+            if len(news_1 + news_2 + news_3) == 0:
+                send_email(f"{now_day}空气质量", contents)
+            else:
+                send_email(f"{now_day}新闻", contents)
+    except Exception as e:
+        send_email(f"{now_day}抓取失败", e)
