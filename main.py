@@ -126,6 +126,6 @@ if __name__ == '__main__':
             f.seek(0, 0)
             msg = f.read()
             bot.sendMessage(me, air("zibo"))
-            bot.sendMessage(me, msg, "MarkdownV2")
+            bot.sendMessage(me, msg)
     except Exception as e:
         bot.sendMessage(me, e)
