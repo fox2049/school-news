@@ -124,11 +124,7 @@ if __name__ == '__main__':
                 for idx, i in enumerate(news_3):
                     f.write(str(idx + 1) + ". " + i + "\n")
             f.seek(0, 0)
-            msg = f"![空气质量]({air('zibo')})\n" \
-                  + f.read() \
-                  + f"\n抓取时间: {now_time}\n" \
-                  + "[fox2049](https://github.com/fox2049)"
-
-            bot.sendMessage(me, msg, parse_mode='MarkdownV2')
+            bot.sendMessage(me, air("zibo"))
+            bot.sendMessage(me, f.read(), parse_mode='MarkdownV2')
     except Exception as e:
         bot.sendMessage(me, e, parse_mode='MarkdownV2')
