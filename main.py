@@ -8,7 +8,7 @@ import telepot
 ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
          '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
 token = sys.argv[2]
-me = int(sys.argv[1])
+me = sys.argv[1]
 bot = telepot.Bot(token)
 
 
