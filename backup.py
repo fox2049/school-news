@@ -1,15 +1,34 @@
 from requests import get
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+import time
 import sys
+import yagmail
 from re import compile
-import telepot
+from datetime import datetime, timedelta
+
+
+time_utc = datetime.utcnow()
+time_peking = (time_utc + timedelta(hours=8))
+last_peking = (time_utc + timedelta(hours=-16))
+now_day = time_peking.strftime("%Y-%m-%d")
+now_time = time_peking.strftime("%H:%M:%S")
+last_day = last_peking.strftime("%Y-%m-%d")
 
 ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
          '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
-token = sys.argv[2]
-me = int(sys.argv[1])
-bot = telepot.Bot(token)
+
+def air(location):
+    url = 'https://aqicn.org/snapshot/' + location  # zibo_pm2.5
+    response = get(url, headers={'User-Agent': ua})
+    data = response.content.decode('utf-8')
+    soup = BeautifulSoup(data, 'html.parser')
+    s = soup.find(name='meta', attrs={'property': 'og:image'})
+    png_url = s['content']
+    r = get(png_url, headers={'User-Agent': ua})
+    content = r.content
+    with open('air.png', 'wb') as fp:
+        fp.write(content)
 
 
 def ge_spider():  # graduate school news
@@ -27,9 +46,8 @@ def ge_spider():  # graduate school news
             s_link = item.find('a', href=compile(r'(\w)'))['href']
             link = urljoin(i, s_link)
             date = item.find('span', class_="news_meta").text
-            if title not in old_news:
-                news_list.append(f"[{title}]({link})")
-                f.write(date + " " + title + "\n")
+            if date == now_day or date == last_day:
+                news_list.append(f"<a href={link}>{title}</a>")
     return news_list
 
 
@@ -55,9 +73,8 @@ def school_spider():  # report news
             title = item.find('span', class_='column-news-title').text
             link = urljoin(url, item['href'])
             date = item.find('span', class_='column-news-date news-date-hide').text
-            if title not in old_news:
-                news_list.append(f"[{title}]({link})")
-                f.write(date + " " + title + "\n")
+            if date == now_day or date == last_day:
+                news_list.append(f"<a href={link}>{title}</a>")
     return news_list
 
 
@@ -79,24 +96,51 @@ def fashion_spider():
         link = urljoin(url, s_link)
         date = date_list[date_counter]
         date_counter += 1
-        if title not in old_news:
-            news_list.append(f"[{title}]({link})")
-            f.write(date + " " + title + "\n")
+        if date == now_day or date == last_day:
+            news_list.append(f"<a href={link}>{title}</a>")
     return news_list
 
+
+def send_email(title, _contents):
+    yag = yagmail.SMTP(user='suesedu@aliyun.com', password=sys.argv[2],
+                       host='smtp.aliyun.com')
+    send_contents = _contents
+    yag.send(sys.argv[1], title, send_contents)
+    print("邮件发送成功")
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     try:
-        f = open("News_Archive.txt", "a+", encoding="utf-8")
-        f.seek(0, 0)
-        old_news = f.read()
-        news = ge_spider() + school_spider() + fashion_spider()
-        f.close()
-        for new in news:
-            print(f"sending {new}")
-            bot.sendMessage(me, f"{new}", parse_mode='MarkdownV2')
-            print("send success")
+        with open(r'News_Archive.txt', 'a+', encoding='utf-8') as f:
+            news_1 = ge_spider()
+            news_2 = school_spider()
+            news_3 = fashion_spider()
+            if len(news_1) != 0:
+                f.write("研究生处新闻\n")
+                for idx, i in enumerate(news_1):
+                    f.write(str(idx+1) + ". " + i + "\n")
+            if len(news_2) != 0:
+                f.write("学校新闻\n")
+                for idx, i in enumerate(news_2):
+                    f.write(str(idx+1) + ". " + i + "\n")
+            if len(news_3) != 0:
+                f.write("学校新闻\n")
+                news_3 = fashion_spider()
+                for idx, i in enumerate(news_3):
+                    f.write(str(idx+1) + ". " + i + "\n")
+            f.seek(0, 0)
+            air("zibo")
+            contents = [
+                yagmail.inline('air.png'),
+                '\n',
+                f.read(),
+                f'\n抓取时间: {now_time}',
+                '\npowered by <a href="https://github.com/fox2049">fox2049</a>'
+            ]
+            if len(news_1 + news_2 + news_3) == 0:
+                send_email(f"{now_day}空气质量", contents)
+            else:
+                send_email(f"{now_day}新闻", contents)
     except Exception as e:
-        bot.sendMessage(me, f"{e}")
+        send_email(f"{now_day}抓取失败", e)
