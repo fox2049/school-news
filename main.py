@@ -1,9 +1,7 @@
 from requests import get
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-import time
 import sys
-import yagmail
 from re import compile
 from datetime import datetime, timedelta
 import telepot
