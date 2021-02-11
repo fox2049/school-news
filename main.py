@@ -8,8 +8,11 @@ import telepot
 
 ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
      '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
-token = sys.argv[2]
-me = int(sys.argv[1])
+# token = sys.argv[2]
+# me = int(sys.argv[1])
+token = "1559044303:AAF-CpNbzZ6DFwUQnIZs13U-yC2A_u1q2lY"
+
+me = 1452454679
 bot = telepot.Bot(token)
 
 time_utc = datetime.utcnow()
@@ -106,27 +109,25 @@ def fashion_spider():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    try:
-        with open(r'News_Archive.txt', 'a+', encoding='utf-8') as f:
-            news_1 = ge_spider()
-            news_2 = school_spider()
-            news_3 = fashion_spider()
-            if len(news_1) != 0:
-                f.write("研究生处新闻\n")
-                for idx, i in enumerate(news_1):
-                    f.write(str(idx + 1) + ". " + i + "\n")
-            if len(news_2) != 0:
-                f.write("学校新闻\n")
-                for idx, i in enumerate(news_2):
-                    f.write(str(idx + 1) + ". " + i + "\n")
-            if len(news_3) != 0:
-                f.write("学校新闻\n")
-                news_3 = fashion_spider()
-                for idx, i in enumerate(news_3):
-                    f.write(str(idx + 1) + ". " + i + "\n")
-            f.seek(0, 0)
-            msg = f.read()
-            bot.sendMessage(me, air("zibo"), "MarkdownV2")
-            bot.sendMessage(me, msg, "HTML")
-    except Exception as e:
-        bot.sendMessage(me, e)
+    with open(r'News_Archive.txt', 'a+', encoding='utf-8') as f:
+        news_1 = ge_spider()
+        news_2 = school_spider()
+        news_3 = fashion_spider()
+        if len(news_1) != 0:
+            f.write("研究生处新闻\n")
+            for idx, i in enumerate(news_1):
+                f.write(str(idx + 1) + ". " + i + "\n")
+        if len(news_2) != 0:
+            f.write("学校新闻\n")
+            for idx, i in enumerate(news_2):
+                f.write(str(idx + 1) + ". " + i + "\n")
+        if len(news_3) != 0:
+            f.write("学院新闻\n")
+            for idx, i in enumerate(news_3):
+                f.write(str(idx + 1) + ". " + i + "\n")
+        f.seek(0, 0)
+        msg = f.read()
+        print("正在发送空气质量")
+        bot.sendMessage(me, air("zibo"), "MarkdownV2")
+        print("正在发送新闻")
+        bot.sendMessage(me, msg, "HTML")
