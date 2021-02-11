@@ -125,6 +125,6 @@ if __name__ == '__main__':
                     f.write(str(idx + 1) + ". " + i + "\n")
             f.seek(0, 0)
             bot.sendMessage(me, air("zibo"))
-            bot.sendMessage(me, f.read())
+            bot.sendMessage(me, r"f.read()", "MarkdownV2")
     except Exception as e:
-        bot.sendMessage(me, e, parse_mode='MarkdownV2')
+        bot.sendMessage(me, e)
