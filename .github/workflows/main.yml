@@ -4,10 +4,8 @@
 name: Python application
 
 on:
-  push:
-    branches: [ master ]
   schedule:
-    - cron: '00 10 * * *'
+    - cron: '00 * * * *'
 
 
 
@@ -27,7 +25,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests
         pip install beautifulsoup4
-        pip install yagmail
+        pip install telepot
     - name: Run
       run: |
-        python main.py ${{ secrets.MAIL }} ${{ secrets.PWD }}
+        python main.py ${{ secrets.TG_ID }} ${{ secrets.TG_TOKEN }}
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .
+        git commit -m "generated"
+        git push
