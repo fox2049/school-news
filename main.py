@@ -124,7 +124,8 @@ if __name__ == '__main__':
                 for idx, i in enumerate(news_3):
                     f.write(str(idx + 1) + ". " + i + "\n")
             f.seek(0, 0)
+            msg = f.read()
             bot.sendMessage(me, air("zibo"))
-            bot.sendMessage(me, r"f.read()")
+            bot.sendMessage(me, msg, "MarkdownV2")
     except Exception as e:
         bot.sendMessage(me, e)
