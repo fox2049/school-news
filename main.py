@@ -30,7 +30,7 @@ def air(location):
     soup = BeautifulSoup(data, 'html.parser')
     s = soup.find(name='meta', attrs={'property': 'og:image'})
     png_url = s['content']
-    png = f"<img src={png_url}/>"
+    png = f"![{location}]({png_url})"
     return png
 
 
@@ -126,7 +126,7 @@ if __name__ == '__main__':
                     f.write(str(idx + 1) + ". " + i + "\n")
             f.seek(0, 0)
             msg = f.read()
-            bot.sendMessage(me, air("zibo"), "HTML")
+            bot.sendMessage(me, air("zibo"), "MarkdownV2")
             bot.sendMessage(me, msg, "HTML")
     except Exception as e:
         bot.sendMessage(me, e)
