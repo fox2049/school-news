@@ -30,7 +30,7 @@ def air(location):
     soup = BeautifulSoup(data, 'html.parser')
     s = soup.find(name='meta', attrs={'property': 'og:image'})
     png_url = s['content']
-    png = f"<img src={png_url}/"
+    png = f"<img src={png_url}/>"
     return png
 
 
