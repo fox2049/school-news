@@ -30,7 +30,8 @@ def air(location):
     soup = BeautifulSoup(data, 'html.parser')
     s = soup.find(name='meta', attrs={'property': 'og:image'})
     png_url = s['content']
-    return png_url
+    png = f"<img src={png_url}/"
+    return png
 
 
 def ge_spider():  # graduate school news
@@ -49,7 +50,7 @@ def ge_spider():  # graduate school news
             link = urljoin(i, s_link)
             date = item.find('span', class_="news_meta").text
             if date == now_day or date == last_day:
-                news_list.append(f"[{title}]({link})")
+                news_list.append(f"<a href={link}> {title} </a>")
     return news_list
 
 
@@ -76,7 +77,7 @@ def school_spider():  # report news
             link = urljoin(url, item['href'])
             date = item.find('span', class_='column-news-date news-date-hide').text
             if date == now_day or date == last_day:
-                news_list.append(f"[{title}]({link})")
+                news_list.append(f"<a href={link}> {title} </a>")
     return news_list
 
 
@@ -99,7 +100,7 @@ def fashion_spider():
         date = date_list[date_counter]
         date_counter += 1
         if date == now_day or date == last_day:
-            news_list.append(f"[{title}]({link})")
+            news_list.append(f"<a href={link}> {title} </a>")
     return news_list
 
 
@@ -125,7 +126,7 @@ if __name__ == '__main__':
                     f.write(str(idx + 1) + ". " + i + "\n")
             f.seek(0, 0)
             msg = f.read()
-            bot.sendMessage(me, air("zibo"))
-            bot.sendMessage(me, msg)
+            bot.sendMessage(me, air("zibo"), "HTML")
+            bot.sendMessage(me, msg, "HTML")
     except Exception as e:
         bot.sendMessage(me, e)
