@@ -19,9 +19,6 @@ now_day = time_peking.strftime("%Y-%m-%d")
 now_time = time_peking.strftime("%H:%M:%S")
 last_day = last_peking.strftime("%Y-%m-%d")
 
-ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' \
-     '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.58'
-
 
 def air(location):
     url = 'https://aqicn.org/snapshot/' + location  # zibo_pm2.5
@@ -112,11 +109,11 @@ if __name__ == '__main__':
         news_3 = fashion_spider()
         if len(news_1) != 0:
             f.write("研究生处新闻\n")
-            for i in news_3:
+            for i in news_1:
                 f.write(i + "\n")
         if len(news_2) != 0:
             f.write("学校新闻\n")
-            for i in news_3:
+            for i in news_2:
                 f.write(i + "\n")
         if len(news_3) != 0:
             f.write("学院新闻\n")
@@ -127,5 +124,5 @@ if __name__ == '__main__':
         print("正在发送空气质量")
         bot.sendMessage(me, air("zibo"), "MarkdownV2")
         print("正在发送新闻")
-        print(msg)
+        print(news_2)
         bot.sendMessage(me, msg, "MarkdownV2")
