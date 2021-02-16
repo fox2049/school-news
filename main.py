@@ -124,7 +124,7 @@ if __name__ == '__main__':
             for i in news_3:
                 f.write(i + "\n")
         f.seek(0, 0)
-        msg = f.read()
+        msg = f.read().replace("|", "-")
         print("正在发送空气质量")
         bot.sendMessage(me, air("zibo"), "MarkdownV2")
         print("正在发送新闻")
