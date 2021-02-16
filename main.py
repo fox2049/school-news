@@ -127,4 +127,5 @@ if __name__ == '__main__':
         print("正在发送空气质量")
         bot.sendMessage(me, air("zibo"), "MarkdownV2")
         print("正在发送新闻")
+        print(msg)
         bot.sendMessage(me, msg, "MarkdownV2")
