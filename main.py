@@ -103,33 +103,30 @@ def fashion_spider():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print("正在发送空气质量")
-    bot.sendMessage(me, air("shanghai"), "MarkdownV2")
-    try:
-        with open(r'news_archive.txt', 'a+', encoding='utf-8') as f:
-            news_1 = ge_spider()
-            news_2 = school_spider()
-            news_3 = fashion_spider()
+     print("正在发送空气质量")
+     bot.sendMessage(me, air("shanghai"), "MarkdownV2")
+     with open(r'news_archive.txt', 'a+', encoding='utf-8') as f:
+       news_1 = ge_spider()
+       news_2 = school_spider()
+       news_3 = fashion_spider()
 
-            print("ge_news: ", news_1)
-            print("school_news: ", news_2)
-            print("fashion_news: ", news_3)
-            if len(news_1) != 0:
-                f.write("研究生处新闻\n")
-                for i in news_1:
-                    f.write(i + "\n")
-            if len(news_2) != 0:
-                f.write("学校新闻\n")
-                for i in news_2:
-                    f.write(i + "\n")
-            if len(news_3) != 0:
-                f.write("学院新闻\n")
-                for i in news_3:
-                    f.write(i + "\n")
-            f.seek(0, 0)
-            msg = f.read().replace("|", " ").replace("-", " and ").replace("+", " plus ")
+       print("ge_news: ", news_1)
+       print("school_news: ", news_2)
+       print("fashion_news: ", news_3)
+       if len(news_1) != 0:
+           f.write("研究生处新闻\n")
+           for i in news_1:
+               f.write(i + "\n")
+       if len(news_2) != 0:
+           f.write("学校新闻\n")
+           for i in news_2:
+               f.write(i + "\n")
+       if len(news_3) != 0:
+           f.write("学院新闻\n")
+           for i in news_3:
+               f.write(i + "\n")
+       f.seek(0, 0)
+       msg = f.read().replace("|", " ").replace("-", " and ").replace("+", " plus ")
 
-            print("正在发送新闻")
-            bot.sendMessage(me, msg, "MarkdownV2")
-    except:
-        bot.sendMessage(me, "爬虫暂时失效咯")
+       print("正在发送新闻")
+       bot.sendMessage(me, msg, "MarkdownV2")
