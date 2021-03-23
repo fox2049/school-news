@@ -126,7 +126,7 @@ if __name__ == '__main__':
            for i in news_3:
                f.write(i + "\n")
        f.seek(0, 0)
-       msg = f.read().replace("|", " ").replace("-", " and ").replace("+", " plus ")
+       msg = f.read().replace("|", " ").replace("-", " and ").replace("+", " plus ").replace("！", " ")
 
        print("正在发送新闻")
        bot.sendMessage(me, msg, "MarkdownV2")
