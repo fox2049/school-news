@@ -10,7 +10,6 @@ on:
     - cron: '00 10 * * *'
 
 
-
 jobs:
   build:
 
